@@ -13,8 +13,8 @@ const CommentSchema = new mongoose.Schema(
       type: String,
       maxlength: [200, "A tweet can't be longer than 200 characters"],
     },
-    image: {
-      type: String,
+    images: {
+      type: Array,
     },
     comments: {
       type: Array,

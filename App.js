@@ -13,26 +13,26 @@ const xss = require("xss-clean");
 const cors = require("cors");
 const mongoSanitize = require("express-mongo-sanitize");
 
-// file upload with multer
-const multer = require("multer");
-const path = require("path");
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/images");
-  },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
-const upload = multer({ storage });
+// // file upload with multer
+// const multer = require("multer");
+// const path = require("path");
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "public/images");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, req.body.name);
+//   },
+// });
+// const upload = multer({ storage });
 
-app.post("/api/v1/upload", upload.single("file"), (req, res) => {
-  try {
-    return res.status(200).json("File uploaded successfully");
-  } catch (error) {
-    console.log(error);
-  }
-});
+// app.post("/api/v1/upload", upload.single("file"), (req, res) => {
+//   try {
+//     return res.status(200).json("File uploaded successfully");
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 const notFoundMiddleware = require("./middlewares/not-found");
 const errorHandlerMiddleware = require("./middlewares/error-handler");
@@ -60,7 +60,7 @@ app.use(express.json());
 
 // path for static files
 
-app.use("/images", express.static(path.join(__dirname, "public/images")));
+// app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
