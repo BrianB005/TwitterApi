@@ -7,7 +7,7 @@ const {
   retweetComment,
   createCommentOnComment,
   getACommentComments,
-} = require("../controllers/CommentController");
+} = require("../controllers/commentController");
 const { authenticateUser } = require("../middlewares/authentication");
 const router = express.Router();
 
