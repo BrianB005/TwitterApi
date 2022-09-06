@@ -70,7 +70,7 @@ app.use("/api/v1/comments", commentsRouter);
 // error middlewares
 app.use(errorHandlerMiddleware);
 app.use(notFoundMiddleware);
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 const start = async () => {
   try {
