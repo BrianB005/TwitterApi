@@ -5,7 +5,7 @@ const Comment = require("../models/Comment");
 const createTweet = async (req, res) => {
   req.body.user = req.user.userId;
   const tweet = await Tweet.create(req.body);
-  res.status(200).json({ tweet });
+  res.status(200).json(tweet);
 };
 
 const getCurrentUserLikedTweets = async (req, res) => {
@@ -144,13 +144,13 @@ const getTimelineTweets = async (req, res) => {
 
 const getCurrentUserMediaTweets = async (req, res) => {
   const userTweets = await Tweet.find({ user: req.user.userId });
-  const mediaTweets = userTweets.filter((tweet) => tweet.image !== null);
+  const mediaTweets = userTweets.filter((tweet) => tweet.images !== null);
 
   res.status(200).json(mediaTweets);
 };
 const getUserMediaTweets = async (req, res) => {
   const userTweets = await Tweet.find({ user: req.params.userId });
-  const mediaTweets = userTweets.filter((tweet) => tweet.image !== null);
+  const mediaTweets = userTweets.filter((tweet) => tweet.images !== null);
 
   res.status(200).json(mediaTweets);
 };

@@ -5,6 +5,7 @@ const {
   updateUserPassword,
   updateUser,
   getCurrentUser,
+  getUser,
 } = require("../controllers/userController");
 const { authenticateUser } = require("../middlewares/authentication");
 
@@ -15,5 +16,6 @@ router.route("/unfollow").post(authenticateUser, unfollowUser);
 router.route("/updatePassword").put(authenticateUser, updateUserPassword);
 router.route("/updateUser").put(authenticateUser, updateUser);
 router.route("/currentUser").get(authenticateUser, getCurrentUser);
+router.route("/get/:userId").get(getUser);
 
 module.exports = router;

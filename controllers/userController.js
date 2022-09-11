@@ -54,14 +54,18 @@ const updateUser = async (req, res) => {
 
   const token = createJWT({ payload: tokenUser });
 
-  const { password, ...others } = user._doc;
+  const { password, email, phoneNumber, ...others } = user._doc;
   res.status(StatusCodes.CREATED).json({ user: others, token: token });
-  res.status(200).json({ user: tokenUser, token });
 };
 
 const getCurrentUser = async (req, res) => {
   const currentUser = await User.findById(req.user.userId);
-  const { password, ...others } = currentUser._doc;
+  const { password, email, phoneNumber, ...others } = currentUser._doc;
+  res.status(200).json({ user: others });
+};
+const getUser = async (req, res) => {
+  const user = await User.findById(req.params.userId);
+  const { password, email, phoneNumber, ...others } = user._doc;
   res.status(200).json({ user: others });
 };
 
@@ -71,4 +75,5 @@ module.exports = {
   followUser,
   unfollowUser,
   getCurrentUser,
+  getUser,
 };
