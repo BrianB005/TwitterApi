@@ -94,7 +94,11 @@ const getUserTweetsAndComments = async (req, res) => {
 
 const likeTweet = async (req, res) => {
   try {
-    const tweet = await Tweet.findById(req.params.tweetId);
+    const tweet = await Tweet.findById(req.params.tweetId).populate("user", {
+      name: 1,
+      username: 1,
+      profilePic: 1,
+    });
     if (!tweet.likes.includes(req.user.userId)) {
       await tweet.updateOne({
         $push: { likes: req.user.userId },
@@ -112,7 +116,11 @@ const likeTweet = async (req, res) => {
 };
 
 const retweetTweet = async (req, res) => {
-  const tweet = await Tweet.findById(req.params.tweetId);
+  const tweet = await Tweet.findById(req.params.tweetId).populate("user", {
+    name: 1,
+    username: 1,
+    profilePic: 1,
+  });
   if (!tweet.retweets.includes(req.user.userId)) {
     await tweet.updateOne({
       $push: { retweets: req.user.userId },
