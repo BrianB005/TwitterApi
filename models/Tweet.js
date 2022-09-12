@@ -3,7 +3,7 @@ const TweetSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      maxlength: [200, "A tweet can't be longer than 200 characters"],
+      maxlength: [500, "A tweet can't be longer than 500 characters"],
     },
     images: {
       type: Array,
