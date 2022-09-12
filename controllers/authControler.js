@@ -29,28 +29,6 @@ const checkUserDetails = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  // const username = req.body.username;
-  // if (req.body.email == null) {
-  //   const phoneNumber = req.body.phoneNumber;
-  //   const numberAlreadyExists = await User.findOne({ phoneNumber });
-
-  //   if (numberAlreadyExists) {
-  //     throw new CustomError.BadRequestError("Phone number already taken");
-  //   }
-  // } else {
-  //   const emailAlreadyExists = await User.findOne({ email: req.body.email });
-
-  //   if (emailAlreadyExists) {
-  //     throw new CustomError.BadRequestError("Email already taken!");
-  //   }
-  // }
-
-  // const usernameAlreadyExists = await User.findOne({ username });
-
-  // if (usernameAlreadyExists) {
-  //   throw new CustomError.BadRequestError("Username already taken");
-  // }
-
   const user = await User.create(req.body);
   const tokenUser = userTokenPayload(user);
   const token = createJWT({ payload: tokenUser });

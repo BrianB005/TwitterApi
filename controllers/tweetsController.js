@@ -4,7 +4,11 @@ const User = require("../models/User");
 const Comment = require("../models/Comment");
 const createTweet = async (req, res) => {
   req.body.user = req.user.userId;
-  const tweet = await Tweet.create(req.body);
+  const tweet = await Tweet.create(req.body).populate("user", {
+    name: 1,
+    username: 1,
+    profilePic: 1,
+  });
   res.status(200).json(tweet);
 };
 
