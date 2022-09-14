@@ -166,7 +166,7 @@ const getUserMediaTweets = async (req, res) => {
   const userTweets = await Tweet.find({ user: req.params.userId })
     .populate("user", { name: 1, username: 1, profilePic: 1 })
     .sort("-createdAt");
-  const mediaTweets = userTweets.filter((tweet) => tweet.images !== null);
+  const mediaTweets = userTweets.filter((tweet) => tweet.images.length !== 0);
 
   res.status(200).json(mediaTweets);
 };
