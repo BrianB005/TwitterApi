@@ -32,12 +32,18 @@ const getUserLikedTweets = async (req, res) => {
   const allTweets = await Tweet.find()
     .populate("user", { name: 1, username: 1, profilePic: 1 })
     .sort("-createdAt");
-  const likedTweets = allTweets
-    .filter((tweet) => tweet.likes.includes(req.params.userId))
+  const likedTweets = allTweets.filter((tweet) =>
+    tweet.likes.includes(req.params.userId)
+  );
+
+  const allComments = await Comment.find()
     .populate("user", { name: 1, username: 1, profilePic: 1 })
     .sort("-createdAt");
+  const likedComments = allComments.filter((comment) =>
+    comment.likes.includes(req.params.userId)
+  );
 
-  res.status(200).json(likedTweets);
+  res.status(200).json(likedTweets.concat(likedComments));
 };
 
 const getCurrentUserTweets = async (req, res) => {
