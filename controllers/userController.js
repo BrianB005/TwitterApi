@@ -1,7 +1,7 @@
 const User = require("../models/User");
 
 const followUser = async (req, res) => {
-  if (req.user.userId === req.body.userId) return;
+  if (req.user.userId === req.params.userId) return;
   const userToFollow = await User.findById(req.body.userId);
 
   const currentUser = await User.findById(req.user.userId);
@@ -17,7 +17,7 @@ const followUser = async (req, res) => {
 };
 
 const unfollowUser = async (req, res) => {
-  const userToUnFollow = await User.findById(req.body.userId);
+  const userToUnFollow = await User.findById(req.params.userId);
 
   const currentUser = await User.findById(req.user.userId);
 
@@ -69,6 +69,57 @@ const getUser = async (req, res) => {
   res.status(200).json({ user: others });
 };
 
+const getCurrentUserFollowing = async (req, res) => {
+  const currentUser = await User.findById(req.user.userId);
+
+  const following = await Promise.all(
+    currentUser.following.map((userId) => {
+      return User.findById(userId);
+    })
+  );
+
+  res.status(200).json(following);
+};
+const getCurrentUserFollowers = async (req, res) => {
+  const currentUser = await User.findById(req.user.userId);
+
+  const followers = await Promise.all(
+    currentUser.followers.map((userId) => {
+      return User.findById(userId);
+    })
+  );
+
+  res.status(200).json(followers);
+};
+
+const getUserFollowing = async (req, res) => {
+  const user = await User.findById(req.params.userId);
+
+  const following = await Promise.all(
+    user.following.map((userId) => {
+      return User.findById(userId);
+    })
+  );
+
+  res.status(200).json(following);
+};
+const getUserFollowers = async (req, res) => {
+  const user = await User.findById(req.params.userId);
+
+  const followers = await Promise.all(
+    user.followers.map((userId) => {
+      return User.findById(userId);
+    })
+  );
+
+  res.status(200).json(followers);
+};
+
+const getAllUsers = async (req, res) => {
+  const allUsers = await User.find();
+  res.status(200).json(allUsers);
+};
+
 module.exports = {
   updateUser,
   updateUserPassword,
@@ -76,4 +127,9 @@ module.exports = {
   unfollowUser,
   getCurrentUser,
   getUser,
+  getAllUsers,
+  getUserFollowers,
+  getCurrentUserFollowers,
+  getUserFollowing,
+  getCurrentUserFollowing,
 };

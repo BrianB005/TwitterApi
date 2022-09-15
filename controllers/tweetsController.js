@@ -4,24 +4,16 @@ const User = require("../models/User");
 const Comment = require("../models/Comment");
 const createTweet = async (req, res) => {
   req.body.user = req.user.userId;
-  const tweet = await Tweet.create(req.body).populate("user", {
-    name: 1,
-    username: 1,
-    profilePic: 1,
-  });
+  const tweet = await Tweet.create(req.body).populate("user");
   res.status(200).json(tweet);
 };
 
 const getCurrentUserLikedTweets = async (req, res) => {
-  const allTweets = await Tweet.find()
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
-    .sort("-createdAt");
+  const allTweets = await Tweet.find().populate("user").sort("-createdAt");
   const likedTweets = allTweets.filter((tweet) =>
     tweet.likes.includes(req.user.userId)
   );
-  const allComments = await Comment.find()
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
-    .sort("-createdAt");
+  const allComments = await Comment.find().populate("user").sort("-createdAt");
   const likedComments = allComments.filter((comment) =>
     comment.likes.includes(req.user.userId)
   );
@@ -29,16 +21,12 @@ const getCurrentUserLikedTweets = async (req, res) => {
   res.status(200).json(likedTweets.concat(likedComments));
 };
 const getUserLikedTweets = async (req, res) => {
-  const allTweets = await Tweet.find()
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
-    .sort("-createdAt");
+  const allTweets = await Tweet.find().populate("user").sort("-createdAt");
   const likedTweets = allTweets.filter((tweet) =>
     tweet.likes.includes(req.params.userId)
   );
 
-  const allComments = await Comment.find()
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
-    .sort("-createdAt");
+  const allComments = await Comment.find().populate("user").sort("-createdAt");
   const likedComments = allComments.filter((comment) =>
     comment.likes.includes(req.params.userId)
   );
@@ -48,11 +36,9 @@ const getUserLikedTweets = async (req, res) => {
 
 const getCurrentUserTweets = async (req, res) => {
   const userTweets = await Tweet.find({ user: req.user.userId })
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
+    .populate("user")
     .sort("-createdAt");
-  const allTweets = await Tweet.find()
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
-    .sort("-createdAt");
+  const allTweets = await Tweet.find().populate("user").sort("-createdAt");
   const retweetedTweets = allTweets.filter((tweet) =>
     tweet.retweets.includes(req.user.userId)
   );
@@ -62,11 +48,9 @@ const getCurrentUserTweets = async (req, res) => {
 };
 const getUserTweets = async (req, res) => {
   const userTweets = await Tweet.find({ user: req.params.userId })
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
+    .populate("user")
     .sort("-createdAt");
-  const allTweets = await Tweet.find()
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
-    .sort("-createdAt");
+  const allTweets = await Tweet.find().populate("user").sort("-createdAt");
   const retweetedTweets = allTweets.filter((tweet) =>
     tweet.retweets.includes(req.params.userId)
   );
@@ -78,10 +62,10 @@ const getUserTweets = async (req, res) => {
 
 const getCurrentUserTweetsAndComments = async (req, res) => {
   const currentUserComments = await Comment.find({ user: req.user.userId })
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
+    .populate("user")
     .sort("-createdAt");
   const currentUserTweets = await Tweet.find({ user: req.user.userId })
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
+    .populate("user")
     .sort("-createdAt");
   const tweetsAndComments = currentUserComments.concat(currentUserTweets);
   res.status(200).json(tweetsAndComments);
@@ -89,10 +73,10 @@ const getCurrentUserTweetsAndComments = async (req, res) => {
 
 const getUserTweetsAndComments = async (req, res) => {
   const currentUserComments = await Comment.find({ user: req.params.userId })
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
+    .populate("user")
     .sort("-createdAt");
   const currentUserTweets = await Tweet.find({ user: req.params.userId })
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
+    .populate("user")
     .sort("-createdAt");
 
   res.status(200).json(currentUserComments.concat(currentUserTweets));
@@ -100,11 +84,7 @@ const getUserTweetsAndComments = async (req, res) => {
 
 const likeTweet = async (req, res) => {
   try {
-    const tweet = await Tweet.findById(req.params.tweetId).populate("user", {
-      name: 1,
-      username: 1,
-      profilePic: 1,
-    });
+    const tweet = await Tweet.findById(req.params.tweetId).populate("user");
     if (!tweet.likes.includes(req.user.userId)) {
       await tweet.updateOne({
         $push: { likes: req.user.userId },
@@ -122,11 +102,7 @@ const likeTweet = async (req, res) => {
 };
 
 const retweetTweet = async (req, res) => {
-  const tweet = await Tweet.findById(req.params.tweetId).populate("user", {
-    name: 1,
-    username: 1,
-    profilePic: 1,
-  });
+  const tweet = await Tweet.findById(req.params.tweetId).populate("user");
   if (!tweet.retweets.includes(req.user.userId)) {
     await tweet.updateOne({
       $push: { retweets: req.user.userId },
@@ -144,12 +120,12 @@ const getTimelineTweets = async (req, res) => {
   const userId = req.user.userId;
   const currentUser = await User.findById(userId);
   const userTweets = await Tweet.find({ user: userId })
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
+    .populate("user")
     .sort("-createdAt");
   const currentUserFollowingTweets = await Promise.all(
     currentUser.following.map((followingId) => {
       return Tweet.find({ user: followingId })
-        .populate("user", { name: 1, username: 1, profilePic: 1 })
+        .populate("user")
         .sort("-createdAt");
     })
   );
@@ -162,7 +138,7 @@ const getTimelineTweets = async (req, res) => {
 
 const getCurrentUserMediaTweets = async (req, res) => {
   const userTweets = await Tweet.find({ user: req.user.userId })
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
+    .populate("user")
     .sort("-createdAt");
   const mediaTweets = userTweets.filter((tweet) => tweet.images.length !== 0);
 
@@ -170,7 +146,7 @@ const getCurrentUserMediaTweets = async (req, res) => {
 };
 const getUserMediaTweets = async (req, res) => {
   const userTweets = await Tweet.find({ user: req.params.userId })
-    .populate("user", { name: 1, username: 1, profilePic: 1 })
+    .populate("user")
     .sort("-createdAt");
   const mediaTweets = userTweets.filter((tweet) => tweet.images.length !== 0);
 
