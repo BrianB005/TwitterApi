@@ -40,9 +40,9 @@ const login = async (req, res) => {
   let user;
   if (req.body.email == null) {
     const phoneNumber = req.body.phoneNumber;
-    user = await User.findOne({ phoneNumber });
+    user = await User.findOne({ phoneNumber }).select("+password");
   } else {
-    user = await User.findOne({ email: req.body.email });
+    user = await User.findOne({ email: req.body.email }).select("+password");
   }
   if (!user) {
     throw new CustomError.UnauthenticatedError("User doesn't exist");
@@ -55,8 +55,8 @@ const login = async (req, res) => {
 
   const token = createJWT({ payload: tokenUser });
 
-  const { password, email, phoneNumber, ...others } = user._doc;
-  res.status(200).json({ user: others, token });
+  // const { password, email, phoneNumber, ...others } = user._doc;
+  res.status(200).json({ user, token });
 };
 const logout = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: "user logged out successfully.!" });

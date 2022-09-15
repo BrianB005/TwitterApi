@@ -2,12 +2,12 @@ const User = require("../models/User");
 
 const followUser = async (req, res) => {
   if (req.user.userId === req.params.userId) return;
-  const userToFollow = await User.findById(req.body.userId);
+  const userToFollow = await User.findById(req.params.userId);
 
   const currentUser = await User.findById(req.user.userId);
 
   await currentUser.updateOne({
-    $addToSet: { following: req.body.userId },
+    $addToSet: { following: req.params.userId },
   });
 
   await userToFollow.updateOne({
@@ -22,7 +22,7 @@ const unfollowUser = async (req, res) => {
   const currentUser = await User.findById(req.user.userId);
 
   await userToUnFollow.updateOne({ $pull: { followers: req.user.userId } });
-  await currentUser.updateOne({ $pull: { following: req.body.userId } });
+  await currentUser.updateOne({ $pull: { following: req.params.userId } });
 
   res.status(200).json("User unfollowed successfully");
 };
@@ -61,12 +61,12 @@ const updateUser = async (req, res) => {
 const getCurrentUser = async (req, res) => {
   const currentUser = await User.findById(req.user.userId);
   const { password, email, phoneNumber, ...others } = currentUser._doc;
-  res.status(200).json({ user: others });
+  res.status(200).json(currentUser);
 };
 const getUser = async (req, res) => {
   const user = await User.findById(req.params.userId);
-  const { password, email, phoneNumber, ...others } = user._doc;
-  res.status(200).json({ user: others });
+
+  res.status(200).json(user);
 };
 
 const getCurrentUserFollowing = async (req, res) => {
@@ -117,7 +117,12 @@ const getUserFollowers = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   const allUsers = await User.find();
-  res.status(200).json(allUsers);
+  const notYetFollowed = await Promise.all(
+    allUsers.filter((user) => {
+      return !user.followers.includes(req.user.userId);
+    })
+  );
+  res.status(200).json(notYetFollowed);
 };
 
 module.exports = {

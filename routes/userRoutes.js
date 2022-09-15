@@ -30,6 +30,6 @@ router.route("/getFollowing/:userId").get(authenticateUser, getUserFollowing);
 router.route("/getFollowing").get(authenticateUser, getCurrentUserFollowing);
 router.route("/getFollowers").get(authenticateUser, getCurrentUserFollowers);
 
-router.route("/").get(getAllUsers);
+router.route("/").get(authenticateUser, getAllUsers);
 
 module.exports = router;
