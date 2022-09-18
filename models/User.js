@@ -76,6 +76,11 @@ UserSchema.pre("save", async function () {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
+UserSchema.pre("remove", async function (next) {
+  await this.model("Tweet").deleteMany({ user: this._id });
+  await this.model("Comment").deleteMany({ user: this._id });
+});
+
 UserSchema.methods.comparePassword = async function (userPassword) {
   const isMatch = await bcrypt.compare(userPassword, this.password);
   return isMatch;

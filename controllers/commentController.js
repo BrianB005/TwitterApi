@@ -53,7 +53,7 @@ const createCommentOnComment = async (req, res) => {
 const getATweetsComments = async (req, res) => {
   const tweetComments = await Comment.find({
     tweet: req.params.tweetId,
-  }).populate("user", { name: 1, username: 1, profilePic: 1 });
+  }).populate("user");
 
   res.status(200).json(tweetComments);
 };

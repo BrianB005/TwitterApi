@@ -54,8 +54,7 @@ const updateUser = async (req, res) => {
 
   const token = createJWT({ payload: tokenUser });
 
-  const { password, email, phoneNumber, ...others } = user._doc;
-  res.status(StatusCodes.CREATED).json({ user: others, token: token });
+  res.status(StatusCodes.CREATED).json({ user, token });
 };
 
 const getCurrentUser = async (req, res) => {
@@ -117,8 +116,19 @@ const getUserFollowers = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   const allUsers = await User.find();
-  const notYetFollowed = await Promise.all(
+
+  const allButCurrentuser = await Promise.all(
     allUsers.filter((user) => {
+      if (user._id.toString() !== req.user.userId) {
+        return user;
+      } else {
+        return;
+      }
+    })
+  );
+
+  const notYetFollowed = await Promise.all(
+    allButCurrentuser.filter((user) => {
       return !user.followers.includes(req.user.userId);
     })
   );
