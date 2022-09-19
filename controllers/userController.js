@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const { authorizeUser, userTokenPayload, createJWT } = require("../utils");
+const StatusCodes = require("http-status-codes");
 
 const followUser = async (req, res) => {
   if (req.user.userId === req.params.userId) return;
@@ -54,7 +56,7 @@ const updateUser = async (req, res) => {
 
   const token = createJWT({ payload: tokenUser });
 
-  res.status(StatusCodes.CREATED).json({ user, token });
+  res.status(200).json({ user, token });
 };
 
 const getCurrentUser = async (req, res) => {
