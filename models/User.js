@@ -17,7 +17,6 @@ const UserSchema = new mongoose.Schema(
     email: {
       type: String,
       unique: true,
-      required: [true, "Please provide an  email address"],
       validate: {
         validator: validator.isEmail,
         message: "Please provide a valid email address",
@@ -45,12 +44,11 @@ const UserSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      default: "https://img.icons8.com/ios/2x/user.png",
+      default: "download.png",
     },
     headerPic: {
       type: String,
-      default:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw_kevCltFNAOTU5eeHe4zXI6ORwUTa_FurQ&usqp=CAU",
+      default: "image3.jpg",
     },
     followers: {
       type: Array,
