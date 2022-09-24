@@ -61,7 +61,6 @@ const updateUser = async (req, res) => {
 
 const getCurrentUser = async (req, res) => {
   const currentUser = await User.findById(req.user.userId);
-  const { password, email, phoneNumber, ...others } = currentUser._doc;
   res.status(200).json(currentUser);
 };
 const getUser = async (req, res) => {

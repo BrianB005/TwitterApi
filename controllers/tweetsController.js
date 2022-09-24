@@ -39,9 +39,13 @@ const getCurrentUserTweets = async (req, res) => {
     .populate("user")
     .sort("-createdAt");
   const allTweets = await Tweet.find().populate("user").sort("-createdAt");
-  const retweetedTweets = allTweets.filter((tweet) =>
-    tweet.retweets.includes(req.user.userId)
-  );
+  const retweetedTweets = allTweets.filter((tweet) => {
+    if (tweet.user?._id.toString() === req.user.userId) {
+      return;
+    } else {
+      return tweet.retweets.includes(req.user.userId);
+    }
+  });
 
   const tweetsAndRetweets = userTweets.concat(retweetedTweets);
   res.status(200).json(tweetsAndRetweets);
@@ -51,9 +55,13 @@ const getUserTweets = async (req, res) => {
     .populate("user")
     .sort("-createdAt");
   const allTweets = await Tweet.find().populate("user").sort("-createdAt");
-  const retweetedTweets = allTweets.filter((tweet) =>
-    tweet.retweets.includes(req.params.userId)
-  );
+  const retweetedTweets = allTweets.filter((tweet) => {
+    if (tweet.user?._id.toString() === req.params.userId) {
+      return;
+    } else {
+      return tweet.retweets.includes(req.user.userId);
+    }
+  });
 
   const tweetsAndRetweets = userTweets.concat(retweetedTweets);
 
@@ -125,6 +133,13 @@ const getTimelineTweets = async (req, res) => {
   const currentUserFollowingTweets = await Promise.all(
     currentUser.following.map((followingId) => {
       return Tweet.find({ user: followingId })
+        .populate("user")
+        .sort("-createdAt");
+    })
+  );
+  const currentUserFollowersTweets = await Promise.all(
+    currentUser.followers.map((followerId) => {
+      return Tweet.find({ user: followerId })
         .populate("user")
         .sort("-createdAt");
     })
