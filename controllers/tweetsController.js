@@ -146,7 +146,9 @@ const getTimelineTweets = async (req, res) => {
   );
   // const userFollowersLikedAndRetweetedTweets = await Promise.all();
 
-  const timelineTweets = userTweets.concat(...currentUserFollowingTweets);
+  const timelineTweets = userTweets
+    .concat(...currentUserFollowingTweets)
+    .concat(currentUserFollowersTweets);
 
   res.status(200).json(timelineTweets);
 };
