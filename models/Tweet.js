@@ -25,16 +25,12 @@ const TweetSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    comments: {
-      type: Array,
-      default: [],
-    },
   },
   { timestamps: true }
 );
 
-TweetSchema.pre("remove",async function(next){
+TweetSchema.pre("remove", async function (next) {
   await this.model("Comment").deleteMany({ tweet: this._id });
-})
+});
 
 module.exports = mongoose.model("Tweet", TweetSchema);

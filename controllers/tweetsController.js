@@ -148,7 +148,7 @@ const getTimelineTweets = async (req, res) => {
 
   const timelineTweets = userTweets
     .concat(...currentUserFollowingTweets)
-    .concat(currentUserFollowersTweets);
+    .concat(...currentUserFollowersTweets);
 
   res.status(200).json(timelineTweets);
 };
