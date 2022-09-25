@@ -16,7 +16,7 @@ const createComment = async (req, res) => {
   });
   await tweetToComment.updateOne({ $addToSet: { comments: comment._id } });
 
-  res.status(200).json(comment);
+  res.status(200).json(tweetToComment);
 };
 const createCommentOnComment = async (req, res) => {
   const commentToComment = await Comment.findById(
