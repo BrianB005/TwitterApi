@@ -3,11 +3,7 @@ const Tweet = require("../models/Tweet");
 
 const createComment = async (req, res) => {
   const tweetToComment = await Tweet.findById(req.params.tweetId).populate(
-    "user",
-    {
-      username: 1,
-      _id: 1,
-    }
+    "user"
   );
 
   req.body.tweet = req.params.tweetId;
@@ -25,10 +21,7 @@ const createComment = async (req, res) => {
 const createCommentOnComment = async (req, res) => {
   const commentToComment = await Comment.findById(
     req.params.commentId
-  ).populate("user", {
-    username: 1,
-    _id: 1,
-  });
+  ).populate("user");
 
   // req.body.replyingTo = tweetToComment.user.username;
   const commentTweetAuthor = commentToComment.replyingTo[0];
