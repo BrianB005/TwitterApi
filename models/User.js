@@ -9,6 +9,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, "You must provide a name"],
     },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
     username: {
       type: String,
       required: [true, "You must provide a username"],

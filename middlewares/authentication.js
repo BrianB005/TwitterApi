@@ -14,11 +14,22 @@ const authenticateUser = async (req, res, next) => {
   const token = AuthorizationHeader.split(" ")[1];
   try {
     const { username, name, userId } = isTokenValid({ token });
-    req.user = { username, name, userId };
+    req.user = { username, name, userId, role };
     next();
   } catch (error) {
     throw new CustomError.UnauthenticatedError("Invalid authentication x");
   }
+};
+
+const authorizePermissions = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      throw new CustomError.UnauthorizedError(
+        "Unauthorized to access this route"
+      );
+    }
+    next();
+  };
 };
 
 module.exports = { authenticateUser };
